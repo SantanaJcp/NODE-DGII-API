@@ -1,11 +1,20 @@
 import { ServerConfig } from "./modules/config";
+import { EnvConfig } from "./modules/config";
+import { config } from "dotenv";
+import  routers  from './routes'
 
-async function main() {
-    const server = new ServerConfig({
-        routers:[]
-    });
-
-    await server.listen();
+if (EnvConfig.get("NODE_ENV") !== "production") {
+    config();
 }
 
-await main();
+ function main() {
+    const port = EnvConfig.get('PORT');
+    const server = new ServerConfig({
+        port,
+        routers
+    });
+
+     server.listen();
+}
+
+main();

@@ -1,11 +1,11 @@
 import express from 'express';
-import {EnvConfig} from "./env.config";
+import { EnvConfig }  from "./env.config";
 
 export class ServerConfig {
-    constructor({routers}) {
+    constructor({port, routers}) {
         this.app = express();
         this.app.set('env', EnvConfig.get('NODE_ENV'));
-        this.app.set('port', EnvConfig.get('PORT'));
+        this.app.set('port', port);
         this.registerJsonMiddleware()
 
         if (routers) {
@@ -16,6 +16,14 @@ export class ServerConfig {
 
         this.registerNotFoundMiddleware().registerErrorHandlingMiddleware();
 
+    }
+
+    get port() {
+        return this.app.get("port");
+    }
+
+    set port(number) {
+        this.app.set("port", number);
     }
 
     registerJsonMiddleware() {
@@ -66,7 +74,7 @@ export class ServerConfig {
         return this;
     }
 
-    async listen() {
+     listen() {
         try {
 
             this.app.listen(this.port, () =>
